@@ -2,6 +2,7 @@ export { default as AreaSeries } from "./AreaSeries";
 export { default as AreaOnlySeries } from "./AreaOnlySeries";
 export { default as ScatterSeries } from "./ScatterSeries";
 export { default as CircleMarker } from "./CircleMarker";
+export { default as ArrowMarker } from "./ArrowMarker";
 export { default as TriangleMarker } from "./TriangleMarker";
 export { default as SquareMarker } from "./SquareMarker";
 export { default as LineSeries } from "./LineSeries";
