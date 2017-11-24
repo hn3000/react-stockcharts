@@ -1,5 +1,12 @@
 ## React Stockcharts
 
+Forked to fix some small problems with the current 0.7.0-beta.19:
+ - new clamping code did not lint
+ - propTypes for clamp did not match defaults
+ - ScatterSeries couldn't handle gaps (and I needed it to)
+ - no ArrowMarker (for ScatterSeries)
+
+
 [![Join the chat at https://gitter.im/rrag/react-stockcharts](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/rrag/react-stockcharts?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![npm version](https://badge.fury.io/js/react-stockcharts.svg)](https://badge.fury.io/js/react-stockcharts)
 
@@ -9,7 +16,7 @@ Built with [React JS](http://facebook.github.io/react/) and [d3](http://d3js.org
 
 Multiple [quick start examples](https://github.com/rrag/react-stockcharts-examples2)
 
-- svg and canvas for improved performance. 
+- svg and canvas for improved performance.
 - pan and zoom, on touch devices too
 
 #### Chart types
@@ -37,7 +44,7 @@ Multiple [quick start examples](https://github.com/rrag/react-stockcharts-exampl
 - ElderRay
 - Elder Impulse
 
-(more to come), 
+(more to come),
 
 and it is simple to create your own indicator too
 
