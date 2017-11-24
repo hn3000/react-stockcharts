@@ -51,6 +51,7 @@ ScatterSeries.propTypes = {
 	marker: PropTypes.func,
 	markerProvider: PropTypes.func,
 	markerProps: PropTypes.object,
+	filter: PropTypes.func
 };
 
 ScatterSeries.defaultProps = {
@@ -58,13 +59,15 @@ ScatterSeries.defaultProps = {
 };
 
 function helper(props, moreProps, xAccessor) {
-	const { yAccessor, markerProvider, markerProps } = props;
+	const { yAccessor, markerProvider, markerProps, filter } = props;
 	let { marker: Marker } = props;
 	const { xScale, chartConfig: { yScale }, plotData } = moreProps;
 
 	if (!(markerProvider || Marker)) throw new Error("required prop, either marker or markerProvider missing");
 
-	return plotData.map(d => {
+	const filteredData = filter ? plotData.filter(filter) : plotData;
+
+	return filteredData.map(d => {
 
 		if (markerProvider) Marker = markerProvider(d);
 
