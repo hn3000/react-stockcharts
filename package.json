@@ -1,6 +1,6 @@
 {
   "name": "@hn3000/react-stockcharts",
-  "version": "0.7.0-beta.19.0-hn",
+  "version": "0.7.0-beta.19.1-hn",
   "description": "Highly customizable stock charts with ReactJS and d3 (tmp fork by @hn3000)",
   "main": "src/index.js",
   "module": "src/index.js",
