@@ -147,7 +147,7 @@ function tickHelper(props, scale) {
 
 	const format = isNotDefined(tickFormat)
 		? baseFormat
-		: d => tickFormat(d) || "";
+		: (d, idx) => tickFormat(d, idx) || "";
 
 	const sign = orient === "top" || orient === "left" ? -1 : 1;
 	const tickSpacing = Math.max(innerTickSize, 0) + tickPadding;
@@ -361,7 +361,7 @@ function axisTicksSVG(props, scale) {
 						x2={tick.x2} y2={tick.y2}
 						labelX={tick.labelX} labelY={tick.labelY}
 						textAnchor={textAnchor}
-						fontSize={fontSize} fontFamily={fontFamily}>{format(tick.value)}</Tick>
+						fontSize={fontSize} fontFamily={fontFamily}>{format(tick.value, idx)}</Tick>
 				);
 			})}
 		</g>
@@ -386,8 +386,8 @@ function drawTicks(ctx, result) {
 	ctx.fillStyle = tickLabelFill;
 	ctx.textAlign = textAnchor === "middle" ? "center" : textAnchor;
 
-	ticks.forEach((tick) => {
-		drawEachTickLabel(ctx, tick, result);
+	ticks.forEach((tick, idx) => {
+		drawEachTickLabel(ctx, tick, result, idx);
 	});
 }
 
@@ -403,11 +403,11 @@ function drawEachTick(ctx, tick, result) {
 	ctx.stroke();
 }
 
-function drawEachTickLabel(ctx, tick, result) {
+function drawEachTickLabel(ctx, tick, result, idx) {
 	const { canvas_dy, format } = result;
 
 	ctx.beginPath();
-	ctx.fillText(format(tick.value), tick.labelX, tick.labelY + canvas_dy);
+	ctx.fillText(format(tick.value, idx), tick.labelX, tick.labelY + canvas_dy);
 }
 
 export default Axis;
