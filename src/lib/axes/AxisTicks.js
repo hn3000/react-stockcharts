@@ -48,7 +48,7 @@ Tick.propTypes = {
 	children: PropTypes.node.isRequired,
 };
 
-Tick.drawOnCanvasStatic = (tick, ctx, result) => {
+Tick.drawOnCanvasStatic = (tick, ctx, result, idx) => {
 	const { scale, tickTransform, canvas_dy, x, y, x2, y2, format } = result;
 
 	const origin = tickTransform(scale, tick);
@@ -59,7 +59,7 @@ Tick.drawOnCanvasStatic = (tick, ctx, result) => {
 	ctx.lineTo(origin[0] + x2, origin[1] + y2);
 	ctx.stroke();
 
-	ctx.fillText(format(tick), origin[0] + x, origin[1] + y + canvas_dy);
+	ctx.fillText(format(tick, idx), origin[0] + x, origin[1] + y + canvas_dy);
 };
 
 class AxisTicks extends Component {
@@ -75,7 +75,7 @@ class AxisTicks extends Component {
 							tickStroke={tickStroke} tickStrokeOpacity={tickStrokeOpacity}
 							dy={dy} x={x} y={y}
 							x2={x2} y2={y2} textAnchor={textAnchor}
-							fontSize={fontSize} fontFamily={fontFamily}>{format(tick)}</Tick>
+							fontSize={fontSize} fontFamily={fontFamily}>{format(tick, idx)}</Tick>
 					);
 				})}
 			</g>
@@ -119,7 +119,7 @@ AxisTicks.helper = (props, scale) => {
 
 	const format = isNotDefined(tickFormat)
 		? baseFormat
-		: d => baseFormat(d) ? tickFormat(d) : "";
+		: (d, idx) => baseFormat(d) ? tickFormat(d, idx) : "";
 
 	const sign = orient === "top" || orient === "left" ? -1 : 1;
 	const tickSpacing = Math.max(innerTickSize, 0) + tickPadding;
@@ -165,8 +165,8 @@ AxisTicks.drawOnCanvasStatic = (props, ctx, xScale, yScale) => {
 	ctx.textAlign = textAnchor === "middle" ? "center" : textAnchor;
 	// ctx.textBaseline = 'middle';
 
-	result.ticks.forEach((tick) => {
-		Tick.drawOnCanvasStatic(tick, ctx, result);
+	result.ticks.forEach((tick, idx) => {
+		Tick.drawOnCanvasStatic(tick, ctx, result, idx);
 	});
 };
 
