@@ -87,13 +87,13 @@ Arrow.drawOnCanvasWithNoStateChange = (props, point, ctx) => {
 	ctx.beginPath();
 
 	ctx.moveTo(x, y + offset);
-	ctx.lineTo(x + base, y);
-	ctx.lineTo(x + base, y + stem);
-	ctx.lineTo(x + flare, y + stem);
-	ctx.lineTo(x, y + h * flow);
-	ctx.lineTo(x - flare, y + stem);
-	ctx.lineTo(x - base, y + stem);
-	ctx.lineTo(x - base, y);
+	ctx.lineTo(x + base, y + offset);
+	ctx.lineTo(x + base, y + offset + stem);
+	ctx.lineTo(x + flare, y + offset + stem);
+	ctx.lineTo(x, y + offset + h * flow);
+	ctx.lineTo(x - flare, y + offset + stem);
+	ctx.lineTo(x - base, y + offset + stem);
+	ctx.lineTo(x - base, y + offset);
 
 	ctx.stroke();
 	ctx.fill();
