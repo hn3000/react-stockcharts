@@ -1,11 +1,16 @@
 ## React Stockcharts
 
-Forked to fix some small problems with the current 0.7.0-beta.19:
+Forked to fix some small problems with the current 0.7.0-beta.22:
  - new clamping code did not lint
  - propTypes for clamp did not match defaults
  - ScatterSeries couldn't handle gaps (and I needed it to)
  - no ArrowMarker (for ScatterSeries)
 
+
+Note: steps to release:
+  * change version (and base version) in package.json, src/index.js and this file
+  * build `npm run release`
+  * publish `cd build && npm publish`
 
 Rest of this file is unchanged, badges point at the original etc.:
 
