@@ -11,16 +11,16 @@ function AreaSeries(props) {
 
 	return (
 		<g className={className}>
-			<LineSeries
-				yAccessor={yAccessor}
-				stroke={stroke} fill="none"
-				strokeWidth={strokeWidth}
-				hoverHighlight={false} />
 			<AreaOnlySeries
 				yAccessor={yAccessor}
 				base={baseAt}
 				stroke="none" fill={fill}
 				opacity={opacity} />
+			<LineSeries
+				yAccessor={yAccessor}
+				stroke={stroke} fill="none"
+				strokeWidth={strokeWidth}
+				hoverHighlight={false} />
 		</g>
 	);
 }
