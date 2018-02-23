@@ -15,7 +15,7 @@ function Arrow(props) {
 	const d = functor(dir)(point.datum);
 	const { x, y } = point;
 	const { offset, flow, base, stem, flare } = getArrowMeasures(w, h, d);
-	const points = `
+	const points = 0 != stem ? `
 		${x},${y + offset}
 		${x + base},${y + offset}
 		${x + base},${y + offset + stem}
@@ -24,6 +24,11 @@ function Arrow(props) {
 		${x - flare},${y + offset + stem}
 		${x - base},${y + offset + stem}
 		${x - base},${y + offset}
+		` : `
+		${x},${y + offset}
+		${x + flare},${y + offset}
+		${x},${y + offset + flow * h}
+		${x - flare},${y + offset}
 		`;
 
 	return (
@@ -87,16 +92,20 @@ Arrow.drawOnCanvasWithNoStateChange = (props, point, ctx) => {
 	ctx.beginPath();
 
 	ctx.moveTo(x, y + offset);
-	ctx.lineTo(x + base, y + offset);
-	ctx.lineTo(x + base, y + offset + stem);
+	if (0 !== stem) {
+		ctx.lineTo(x + base, y + offset);
+		ctx.lineTo(x + base, y + offset + stem);
+	}
 	ctx.lineTo(x + flare, y + offset + stem);
 	ctx.lineTo(x, y + offset + h * flow);
 	ctx.lineTo(x - flare, y + offset + stem);
-	ctx.lineTo(x - base, y + offset + stem);
-	ctx.lineTo(x - base, y + offset);
-
-	ctx.stroke();
+	if (0 !== stem) {
+		ctx.lineTo(x - base, y + offset + stem);
+		ctx.lineTo(x - base, y + offset);
+	}
+	ctx.closePath();
 	ctx.fill();
+	ctx.stroke();
 };
 export default Arrow;
 
@@ -108,7 +117,8 @@ function getArrowMeasures(w, h, d) {
 	const offset = (to ? h : 0) * -flow;
 
 	const base = w / 6;
-	const stem = (h - w) * flow;
+	const stemlength = Math.max(0, (h - w));
+	const stem = stemlength * flow;
 	const flare = w / 2;
 
 	return {
