@@ -135,6 +135,7 @@ function getBars(props, moreProps) {
 				x,
 				y: Math.round(y),
 				height: Math.round(h),
+				fullHeight: getBase(xScale, yScale, d),
 				width: offset * 2,
 				fill: getFill(d, 0),
 				stroke: stroke ? getFill(d, 0) : "none",
