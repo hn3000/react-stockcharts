@@ -96,10 +96,11 @@ export default BarSeries;
  to create bars
 */
 function getBars(props, moreProps) {
-	const { baseAt, fill, gradient, stroke, yAccessor } = props;
+	const { baseAt, fill, gradient, stroke, yAccessor, lineAccessor, lineColor } = props;
 	const { xScale, xAccessor, plotData, chartConfig: { yScale } } = moreProps;
 
 	const getFill = functor(fill);
+	const getLineColor = functor(lineColor);
 	const getBase = functor(baseAt);
 	const getGradient = functor(gradient);
 
@@ -123,11 +124,18 @@ function getBars(props, moreProps) {
 			let y = yScale(yValue);
 
 			const x = Math.round(xScale(xAccessor(d))) - offset;
-			let h = getBase(xScale, yScale, d) - yScale(yValue);
+			let base = getBase(xScale, yScale, d);
+			let h = base - yScale(yValue);
 
 			if (h < 0) {
 				y = y + h;
 				h = -h;
+			}
+
+			let line;
+			if (lineAccessor) {
+				const lineValue = lineAccessor(d);
+				line = Math.round(yScale(lineValue));
 			}
 
 			return {
@@ -135,8 +143,10 @@ function getBars(props, moreProps) {
 				x,
 				y: Math.round(y),
 				height: Math.round(h),
-				fullHeight: getBase(xScale, yScale, d),
+				line: line,
+				fullHeight: base,
 				width: offset * 2,
+				lineColor: getLineColor(d, 0),
 				fill: getFill(d, 0),
 				stroke: stroke ? getFill(d, 0) : "none",
 				gradient: gradient ? getGradient(d, 0) : undefined

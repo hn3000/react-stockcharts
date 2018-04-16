@@ -224,6 +224,10 @@ export function drawOnCanvas2(props, ctx, bars) {
 				*/
 				fillGradient(ctx, d, 0.5, props.fullHeightGradient);
 				ctx.fillRect(d.x - 0.5, d.y, 1, d.height);
+				if (d.line) {
+					ctx.fillStyle = d.lineColor;
+					ctx.fillRect(d.x, d.line, d.width, 1);
+				}
 			} else {
 				/* <rect key={idx} className={d.className}
 						stroke={stroke}
@@ -240,6 +244,10 @@ export function drawOnCanvas2(props, ctx, bars) {
 				const gradientFill = fillGradient(ctx, d, 0, props.fullHeightGradient);
 				ctx.fillRect(d.x, d.y, d.width, d.height);
 				if (stroke && !gradientFill) ctx.strokeRect(d.x, d.y, d.width, d.height);
+				if (d.line) {
+					ctx.fillStyle = d.lineColor;
+					ctx.fillRect(d.x, d.line, d.width, 1);
+				}
 			}
 
 		});
