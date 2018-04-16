@@ -96,11 +96,12 @@ export default BarSeries;
  to create bars
 */
 function getBars(props, moreProps) {
-	const { baseAt, fill, stroke, yAccessor } = props;
+	const { baseAt, fill, gradient, stroke, yAccessor } = props;
 	const { xScale, xAccessor, plotData, chartConfig: { yScale } } = moreProps;
 
 	const getFill = functor(fill);
 	const getBase = functor(baseAt);
+	const getGradient = functor(gradient);
 
 	const widthFunctor = functor(props.width);
 
@@ -137,6 +138,7 @@ function getBars(props, moreProps) {
 				width: offset * 2,
 				fill: getFill(d, 0),
 				stroke: stroke ? getFill(d, 0) : "none",
+				gradient: gradient ? getGradient(d, 0) : undefined
 			};
 		});
 
