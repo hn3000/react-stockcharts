@@ -170,6 +170,13 @@ export function getBarsSVG2(props, bars) {
 	});
 }
 
+function getGradientFillStyle(ctx, x, y, height, gradientArr) {
+	let gradient = ctx.createLinearGradient(x,y,x,y+height);
+	let step = 1 / gradientArr.length;
+	gradientArr.forEach((val, i) => gradient.addColorStop(val.offset || step*(i+1),val.color||val));
+	return gradient;
+}
+
 export function drawOnCanvas2(props, ctx, bars) {
 	const { stroke } = props;
 
@@ -200,6 +207,9 @@ export function drawOnCanvas2(props, ctx, bars) {
 				ctx.lineTo(d.x, d.y + d.height);
 				ctx.stroke();
 				*/
+				if (d.gradient && d.gradient.length && d.x && d.y && d.height) {
+					ctx.fillStyle = getGradientFillStyle(ctx, d.x - 0.5,  d.y, d.height, d.gradient);
+				}
 				ctx.fillRect(d.x - 0.5, d.y, 1, d.height);
 			} else {
 				/* <rect key={idx} className={d.className}
@@ -214,6 +224,9 @@ export function drawOnCanvas2(props, ctx, bars) {
 				ctx.rect(d.x, d.y, d.width, d.height);
 				ctx.fill();
 				*/
+				if (d.gradient && d.gradient.length && d.x && d.y && d.height) {
+					ctx.fillStyle = getGradientFillStyle(ctx, d.x,  d.y, d.height, d.gradient);
+				}
 				ctx.fillRect(d.x, d.y, d.width, d.height);
 				if (stroke) ctx.strokeRect(d.x, d.y, d.width, d.height);
 			}
