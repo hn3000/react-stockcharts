@@ -46,7 +46,7 @@ Split.defaultProps = {
 	strokeWidth: 1,
 	opacity: 0.5,
 	fill: "#4682B4",
-	className: "react-stockcharts-marker-rect",
+	className: "react-stockcharts-marker-split",
 };
 Split.drawOnCanvas = (props, point, ctx) => {
 	const { stroke, fill, opacity, strokeWidth } = props;
