@@ -1,4 +1,4 @@
-"use strict";
+
 
 import React, { Component } from "react";
 import PropTypes from "prop-types";
@@ -14,7 +14,7 @@ import StackedBarSeries, {
 	identityStack
 } from "./StackedBarSeries";
 
-import { functor } from "../utils";
+import { functor, isDefined } from "../utils";
 
 class BarSeries extends Component {
 	constructor(props) {
@@ -109,7 +109,6 @@ function getBars(props, moreProps) {
 		xAccessor,
 		plotData
 	});
-
 	/*
 	const barWidth = Math.round(width);
 	const offset = Math.round(barWidth === 1 ? 0 : 0.5 * barWidth);
@@ -117,6 +116,7 @@ function getBars(props, moreProps) {
 	const offset = Math.floor(0.5 * width);
 
 	const bars = plotData
+		.filter(d => isDefined(yAccessor(d)))
 		.map(d => {
 			const yValue = yAccessor(d);
 			let y = yScale(yValue);

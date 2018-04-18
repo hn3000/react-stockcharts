@@ -1,4 +1,4 @@
-"use strict";
+
 
 import React, { Component } from "react";
 import PropTypes from "prop-types";
@@ -17,58 +17,76 @@ class AreaOnlySeries extends Component {
 	}
 	drawOnCanvas(ctx, moreProps) {
 		const { yAccessor, defined, base } = this.props;
-		const { fill, stroke, opacity } = this.props;
+		const { fill, stroke, opacity, interpolation, canvasClip } = this.props;
 
 		const { xScale, chartConfig: { yScale }, plotData, xAccessor } = moreProps;
 
-		const newBase = functor(base);
+		if (canvasClip) {
+			ctx.save();
+			canvasClip(ctx, moreProps);
+		}
 
 		ctx.fillStyle = hexToRGBA(fill, opacity);
 		ctx.strokeStyle = stroke;
 
-		let points0 = [], points1 = [];
+		ctx.beginPath();
+		const newBase = functor(base);
+		const areaSeries = d3Area()
+			.defined(d => defined(yAccessor(d)))
+			.x((d) => Math.round(xScale(xAccessor(d))))
+			.y0((d) => newBase(yScale, d, moreProps))
+			.y1((d) => Math.round(yScale(yAccessor(d))))
+			.context(ctx);
 
-		for (let i = 0; i < plotData.length; i++) {
-			const d = plotData[i];
-			if (defined(yAccessor(d), i)) {
-				const [x, y1, y0] = [xScale(xAccessor(d)), yScale(yAccessor(d)), newBase(yScale, d, moreProps)];
-
-				points0.push([x, y0]);
-				points1.push([x, y1]);
-			} else if (points0.length) {
-				segment(points0, points1, ctx);
-				points0 = [];
-				points1 = [];
-			}
+		if (isDefined(interpolation)) {
+			areaSeries.curve(interpolation);
 		}
-		if (points0.length) segment(points0, points1, ctx);
+		areaSeries(plotData);
+		ctx.fill();
+
+		if (canvasClip) {
+			ctx.restore();
+		}
 	}
 	renderSVG(moreProps) {
-		const { yAccessor, defined, base } = this.props;
-		const { stroke, fill, className, opacity } = this.props;
+		const { yAccessor, defined, base, style } = this.props;
+		const { stroke, fill, className, opacity, interpolation } = this.props;
 
 		const { xScale, chartConfig: { yScale }, plotData, xAccessor } = moreProps;
 
 		const newBase = functor(base);
 		const areaSeries = d3Area()
 			.defined(d => defined(yAccessor(d)))
-			.x((d) => xScale(xAccessor(d)))
+			.x((d) => Math.round(xScale(xAccessor(d))))
 			.y0((d) => newBase(yScale, d, moreProps))
-			.y1((d) => yScale(yAccessor(d)));
+			.y1((d) => Math.round(yScale(yAccessor(d))));
+
+		if (isDefined(interpolation)) {
+			areaSeries.curve(interpolation);
+		}
 
 		const d = areaSeries(plotData);
 		const newClassName = className.concat(isDefined(stroke) ? "" : " line-stroke");
 		return (
-			<path d={d} stroke={stroke} fill={fill} className={newClassName} opacity={opacity} />
+			<path
+				style={style}
+				d={d}
+				stroke={stroke}
+				fill={fill}
+				className={newClassName}
+				fillOpacity={opacity}
+			/>
 		);
 	}
 	render() {
-		return <GenericChartComponent
-			svgDraw={this.renderSVG}
-			canvasDraw={this.drawOnCanvas}
-			canvasToDraw={getAxisCanvas}
-			drawOn={["pan"]}
-		/>;
+		return (
+			<GenericChartComponent
+				svgDraw={this.renderSVG}
+				canvasDraw={this.drawOnCanvas}
+				canvasToDraw={getAxisCanvas}
+				drawOn={["pan"]}
+			/>
+		);
 	}
 }
 
@@ -82,6 +100,9 @@ AreaOnlySeries.propTypes = {
 	base: PropTypes.oneOfType([
 		PropTypes.func, PropTypes.number
 	]),
+	interpolation: PropTypes.func,
+	canvasClip: PropTypes.func,
+	style: PropTypes.object,
 };
 
 AreaOnlySeries.defaultProps = {
@@ -91,25 +112,5 @@ AreaOnlySeries.defaultProps = {
 	defined: d => !isNaN(d),
 	base: (yScale /* , d, moreProps */) => first(yScale.range()),
 };
-
-
-function segment(points0, points1, ctx) {
-	ctx.beginPath();
-	const [x0, y0] = first(points0);
-	ctx.moveTo(x0, y0);
-
-	let i;
-	for (i = 0; i < points1.length; i++) {
-		const [x1, y1] = points1[i];
-		ctx.lineTo(x1, y1);
-	}
-
-	for (i = points0.length - 1; i >= 0; i--) {
-		const [x0, y0] = points0[i];
-		ctx.lineTo(x0, y0);
-	}
-	ctx.closePath();
-	ctx.fill();
-}
 
 export default AreaOnlySeries;
