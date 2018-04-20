@@ -6,6 +6,7 @@ export { default as CircleMarker } from "./CircleMarker";
 export { default as ArrowMarker } from "./ArrowMarker";
 export { default as TriangleMarker } from "./TriangleMarker";
 export { default as SquareMarker } from "./SquareMarker";
+export { default as SvgLoaderMarker } from "./SvgLoaderMarker";
 export { default as LineSeries } from "./LineSeries";
 export { default as CandlestickSeries } from "./CandlestickSeries";
 export { default as OHLCSeries } from "./OHLCSeries";
