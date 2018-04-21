@@ -226,7 +226,7 @@ export function drawOnCanvas2(props, ctx, bars) {
 				ctx.fillRect(d.x - 0.5, d.y, 1, d.height);
 				if (d.line) {
 					ctx.fillStyle = d.lineColor;
-					ctx.fillRect(d.x, d.line, d.width, 1);
+					ctx.fillRect(d.x - 0.5, d.line, d.width, d.lineHeight);
 				}
 			} else {
 				/* <rect key={idx} className={d.className}
@@ -244,9 +244,9 @@ export function drawOnCanvas2(props, ctx, bars) {
 				const gradientFill = fillGradient(ctx, d, 0, props.fullHeightGradient);
 				ctx.fillRect(d.x, d.y, d.width, d.height);
 				if (stroke && !gradientFill) ctx.strokeRect(d.x, d.y, d.width, d.height);
-				if (d.line) {
+				if (typeof d.line === 'number') {
 					ctx.fillStyle = d.lineColor;
-					ctx.fillRect(d.x, d.line, d.width, 1);
+					ctx.fillRect(d.x, d.line, d.width, d.lineHeight);
 				}
 			}
 
