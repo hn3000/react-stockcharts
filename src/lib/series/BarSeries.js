@@ -96,7 +96,7 @@ export default BarSeries;
  to create bars
 */
 function getBars(props, moreProps) {
-	const { baseAt, fill, gradient, stroke, yAccessor, lineAccessor, lineColor } = props;
+	const { baseAt, fill, gradient, stroke, yAccessor, lineAccessor, lineColor, lineHeight: lineHeightProp } = props;
 	const { xScale, xAccessor, plotData, chartConfig: { yScale } } = moreProps;
 
 	const getFill = functor(fill);
@@ -132,10 +132,13 @@ function getBars(props, moreProps) {
 				h = -h;
 			}
 
+			let lineHeight;
 			let line;
 			if (lineAccessor) {
+				lineHeight = lineHeightProp || Math.floor(base / yValue / 2);
+				const displace = Math.floor(base / yValue / 2) - lineHeight / 2;
 				const lineValue = lineAccessor(d);
-				line = Math.round(yScale(lineValue));
+				line = Math.round(yScale(lineValue)) + displace;
 			}
 
 			return {
@@ -143,9 +146,10 @@ function getBars(props, moreProps) {
 				x,
 				y: Math.round(y),
 				height: Math.round(h),
-				line: line,
 				fullHeight: base,
 				width: offset * 2,
+				line: line,
+				lineHeight: lineHeight,
 				lineColor: getLineColor(d, 0),
 				fill: getFill(d, 0),
 				stroke: stroke ? getFill(d, 0) : "none",
