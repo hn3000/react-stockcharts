@@ -19,7 +19,7 @@ import {
 	CrossHairCursor,
 	EdgeIndicator,
 	MouseCoordinateY,
-	MouseCoordinateX
+	MouseCoordinateXV2,
 } from "react-stockcharts/lib/coordinates";
 
 import { discontinuousTimeScaleProvider } from "react-stockcharts/lib/scale";
@@ -157,17 +157,20 @@ class CandleStickChartWithInteractiveYCoordinate extends React.Component {
 				{
 					...InteractiveYCoordinate.defaultProps.defaultPriceCoordinate,
 					yValue: 55.90,
-					id: shortid.generate()
+					id: shortid.generate(),
+					draggable: true,
 				},
 				{
 					...buy,
 					yValue: 50.90,
-					id: shortid.generate()
+					id: shortid.generate(),
+					draggable: false,
 				},
 				{
 					...sell,
 					yValue: 58.90,
-					id: shortid.generate()
+					id: shortid.generate(),
+					draggable: false,
 				},
 			],
 			yCoordinateList_3: [],
@@ -253,12 +256,15 @@ class CandleStickChartWithInteractiveYCoordinate extends React.Component {
 	}
 	handleDialogClose() {
 		// cancel alert edit
-		const { originalAlertList, alertToEdit } = this.state;
-		const key = `yCoordinateList_${alertToEdit.chartId}`;
+		this.setState(state => {
+			const { originalAlertList, alertToEdit } = state;
+			const key = `yCoordinateList_${alertToEdit.chartId}`;
+			const list = originalAlertList || state[key];
 
-		this.setState({
-			showModal: false,
-			[key]: originalAlertList,
+			return {
+				showModal: false,
+				[key]: list,
+			};
 		});
 	}
 	componentDidMount() {
@@ -267,8 +273,16 @@ class CandleStickChartWithInteractiveYCoordinate extends React.Component {
 	componentWillUnmount() {
 		document.removeEventListener("keyup", this.onKeyPress);
 	}
-	onDelete(index, moreProps) {
-		console.log(index, moreProps)
+	onDelete(yCoordinate, moreProps) {
+		this.setState(state => {
+			const chartId = moreProps.chartConfig.id;
+			const key = `yCoordinateList_${chartId}`;
+
+			const list = state[key];
+			return {
+				[key]: list.filter(d => d.id !== yCoordinate.id)
+			};
+		});
 	}
 	onDragComplete(yCoordinateList, moreProps, draggedAlert) {
 		// this gets called on drag complete of drawing object
@@ -410,7 +424,7 @@ class CandleStickChartWithInteractiveYCoordinate extends React.Component {
 						<XAxis axisAt="bottom" orient="bottom"/>
 						<YAxis axisAt="right" orient="right" ticks={2} />
 
-						<MouseCoordinateX
+						<MouseCoordinateXV2
 							at="bottom"
 							orient="bottom"
 							displayFormat={timeFormat("%Y-%m-%d")} />
